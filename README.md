@@ -14,9 +14,8 @@ Since the naïve extension hasn't been published to market, you can download the
 
 ## TODO
 
-1. Aside from the evaluation of CPS(Character Per Second), It may be necessary to evaluate WPS(Word Per Second).
-2. Plot a broken line graph to show the change of CPS and Accuracy.
-3. Mine the coding content and analyze it for more interesting conclusion.
+1. Plot a broken line graph to show the change of CPS and Accuracy.
+2. Mine the coding content and analyze it for more interesting conclusion.
 
 ## Release Notes
 
