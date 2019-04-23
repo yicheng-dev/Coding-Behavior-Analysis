@@ -19,6 +19,12 @@
 				"command": "extension.CBA",
 				"title": "CBA"
 			}
+		],
+		"keybindings":[
+			{
+				"command": "cba.evaluation",
+				"key": "ctrl+shift+A"
+			}
 		]
 	},
 	"scripts": {

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { doEvaluation } from './evaluation';
 
 class TypedChar {
 	typedTime : number;
@@ -15,8 +16,12 @@ const DELAY_RATE = 10;
 var charVec : any = [];
 var backSpaceVec : any = [];
 var spaceVec : any = [];
+export var codingSpeedList : any = [];
+export var codingAccuracyList : any = [];
+
 
 var currentTime = new Date().getTime();
+var startTime : any;
 
 let codingSpeedItem: vscode.StatusBarItem;
 let accuracyItem : vscode.StatusBarItem;
@@ -38,21 +43,25 @@ function updateStatusBarItem(): void {
 				codeWordCnt ++;
 			}
 		}
-		let codeSpeedCps = (codeCharCnt * 1000.0 / (INTERVAL * DELAY_RATE)).toFixed(2);
-		let codeSpeedWps = (codeWordCnt * 1000.0 / (INTERVAL * DELAY_RATE)).toFixed(2);
-		codingSpeedItem.text = `Coding Speed: ${codeSpeedCps}CPS | ${codeSpeedWps}WPS`;
+		let codeSpeedCps = (codeCharCnt * 1000.0 / (INTERVAL * DELAY_RATE));
+		let codeSpeedWps = (codeWordCnt * 1000.0 / (INTERVAL * DELAY_RATE));
+		codingSpeedItem.text = `Coding Speed: ${codeSpeedCps.toFixed(2)}CPS | ${codeSpeedWps.toFixed(2)}WPS`;
+		var codingSpeedListItem = {x: (currentTime - startTime) / 1000.0, y: codeSpeedCps};
+		codingSpeedList.push(codingSpeedListItem);
 		codingSpeedItem.show();
 
 		let accurateCnt = charVec.length;
 		let totalCnt = charVec.length + backSpaceVec.length;
 		let accuracy;
 		if (totalCnt > 0){
-			accuracy = (accurateCnt * 100.0 / totalCnt).toFixed(2);
+			accuracy = (accurateCnt * 100.0 / totalCnt);
 		}
 		else{
-			accuracy = (0).toFixed(2);
+			accuracy = 0;
 		}
-		accuracyItem.text = `Accuracy: ${accuracy}%`;
+		accuracyItem.text = `Accuracy: ${accuracy.toFixed(2)}%`;
+		var codingAccuracyListItem = {x: (currentTime - startTime) / 1000.0, y: accuracy};
+		codingAccuracyList.push(codingAccuracyListItem);
 		accuracyItem.show();
 	}
 	else{
@@ -94,13 +103,18 @@ function timeoutProcess(time : number){
 
 export function activate(context: vscode.ExtensionContext) {
 	currentTime = new Date().getTime();
+	startTime = new Date().getTime();
 	let disposable = vscode.commands.registerCommand('extension.CBA', () => {});
+	let evaluation = vscode.commands.registerCommand('cba.evaluation', () => {
+		doEvaluation(context);
+	});
 	codingSpeedItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 200);
 	accuracyItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 200);
 	context.subscriptions.push(codingSpeedItem);
 	context.subscriptions.push(accuracyItem);
-	timeoutProcess(INTERVAL);
+	context.subscriptions.push(evaluation);
 	context.subscriptions.push(disposable);
+	timeoutProcess(INTERVAL);
 	vscode.workspace.onDidChangeTextDocument(event => {
 		var typedChar = new TypedChar(new Date().getTime(), event.contentChanges[0].text);
 		if (typedChar.val === ""){

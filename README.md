@@ -4,9 +4,11 @@ An extension for VS Code to provide an analysis of coding behavior like coding s
 
 ## Features
 
-At current stage, by launching the CBA extension, you can see your coding speed and accuracy in the status bar of VS Code. An example is shown as follows.
+- At current stage, by launching the CBA extension, you can see your coding speed and accuracy in the status bar of VS Code. An example is shown as follows.
 
 ![](images/example.gif)
+
+- A shortcut `CTRL+SHIFT+A` is provided to generate a broken line graph which shows the change of your coding speed. Currently we use [canvasJS](https://canvasjs.com) to generate it, but [Chart.js](https://www.chartjs.org) may be a better choice since it's open source.
 
 ## Run
 
