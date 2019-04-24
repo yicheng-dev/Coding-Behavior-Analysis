@@ -44,7 +44,6 @@ function getWebviewContent() {
     return `<!DOCTYPE HTML>
     <html>
     <head>
-    <canvas id="myChart" style="height: 300px; width: 100%;"></canvas>
     <script>
     var speedJsonCps;
     var speedJsonWps;
@@ -52,6 +51,7 @@ function getWebviewContent() {
     var xlabels = [];
     var ylabelsCps = [];
     var ylabelsWps = [];
+    var ylabelsAcc = [];
     window.addEventListener('message', event => {
         const message = event.data;
         speedJsonCps = message[0].content;
@@ -68,6 +68,9 @@ function getWebviewContent() {
         }
         for (i = 0; i < speedJsonWps.length; i ++){
             ylabelsWps.push(speedJsonWps[i].y);
+        }
+        for (i = 0; i < speedJsonWps.length; i ++){
+            ylabelsAcc.push(accuracyJson[i].y);
         }
         var data = {
             labels: xlabels,
@@ -97,16 +100,52 @@ function getWebviewContent() {
                 }]
             }
         };
-        var ctx = document.getElementById("myChart").getContext("2d");
-        var MyNewChart = new Chart(ctx, {
+        var ctx = document.getElementById("speedChart").getContext("2d");
+        var speedChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: options
+        });
+
+        data = {
+            labels: xlabels,
+            datasets: [{
+                label: 'Accuracy (%)',
+                data: ylabelsAcc
+            }]
+        };
+        options = {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time (s)'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Accuracy (%)'
+                    }
+                }]
+            }
+        };
+        ctx = document.getElementById("accuracyChart").getContext("2d");
+        var accuracyChart = new Chart(ctx, {
             type: 'line',
             data: data,
             options: options
         });
     }
     </script>
+    <title> Evaluation of Coding Behavior </title>
     </head>
     <body>
+    <h1>Evaluation of Coding Behavior</h1>
+    <canvas id="speedChart" style="height: 300px; width: 100%;"></canvas>
+    <canvas id="accuracyChart" style="height: 300px; width: 100%;"></canvas>
     </body>
     </html>`;
 }

@@ -10,7 +10,7 @@ class TypedChar {
 	}
 }
 
-const INTERVAL = 300;
+const INTERVAL = 500;
 const DELAY_RATE = 10;
 
 var charVec : any = [];
@@ -97,16 +97,16 @@ function deleteOldChar(): void{
 
 function timeoutProcess(time : number){
 	setTimeout(() => {
+		updateStatusBarItem();
 		currentTime = new Date().getTime();
 		// deleteOldChar();
-		updateStatusBarItem();
 		timeoutProcess(time);
 	}, time);
 }
 
 export function activate(context: vscode.ExtensionContext) {
 	currentTime = new Date().getTime();
-	startTime = new Date().getTime();
+	startTime = currentTime;
 	let disposable = vscode.commands.registerCommand('extension.CBA', () => {});
 	let evaluation = vscode.commands.registerCommand('cba.evaluation', () => {
 		doEvaluation(context);
