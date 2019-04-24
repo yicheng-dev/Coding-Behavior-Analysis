@@ -59,7 +59,7 @@ function getWebviewContent() {
         accuracyJson = message[2].content;
     });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script>
     window.onload = function () {
         for (var i = 0; i < speedJsonCps.length; i ++){
@@ -106,7 +106,6 @@ function getWebviewContent() {
             data: data,
             options: options
         });
-
         data = {
             labels: xlabels,
             datasets: [{
@@ -149,4 +148,3 @@ function getWebviewContent() {
     </body>
     </html>`;
 }
-

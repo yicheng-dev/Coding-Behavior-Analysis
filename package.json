@@ -1,8 +1,14 @@
 {
-	"name": "cba",
-	"displayName": "CBA",
+	"name": "cba-vscode",
+	"displayName": "Coding Behavior Analysis",
+	"publisher": "Broccoli",
 	"description": "a tool analyzing your coding behavior",
-	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/NJUBroccoli/Coding-Behavior-Analysis/"
+	},
+	"license": "MIT",
+	"version": "1.0.0",
 	"engines": {
 		"vscode": "^1.33.0"
 	},
