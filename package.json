@@ -8,7 +8,7 @@
 		"url": "https://github.com/NJUBroccoli/Coding-Behavior-Analysis/"
 	},
 	"license": "MIT",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"engines": {
 		"vscode": "^1.33.0"
 	},
@@ -30,6 +30,10 @@
 			{
 				"command": "cba.evaluation",
 				"key": "ctrl+shift+A"
+			},
+			{
+				"command": "cba.disable",
+				"key": "ctrl+shift+C"
 			}
 		]
 	},

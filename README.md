@@ -10,6 +10,8 @@ An extension for VS Code to provide an analysis of coding behavior like coding s
 
 - A shortcut `CTRL+SHIFT+A` is provided to generate a broken line graph which shows the change of your coding speed. Currently we use [Chart.js](https://www.chartjs.org) to generate it. **At current stage, network connection is required.**
 
+- You can type `CTRL+SHIFT+C` to disable it.
+
 ## Install & Run
 
 - It is available in the VS Code Extension Marketplace, and you can search `Coding Behavior Analysis` in it. [Visual Studio Code Market Place: Coding Behavior Analysis](https://marketplace.visualstudio.com/items?itemName=Broccoli.cba-vscode)
@@ -22,6 +24,10 @@ An extension for VS Code to provide an analysis of coding behavior like coding s
 2. Mine the coding content and analyze it for more interesting conclusion.
 
 ## Release Notes
+
+### 1.0.1
+
+Add support for disabling this extension.
 
 ### 1.0.0
 

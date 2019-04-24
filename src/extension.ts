@@ -23,6 +23,7 @@ export var codingAccuracyList : any = [];
 
 var currentTime = new Date().getTime();
 var startTime : any;
+var able : number = 0;
 
 let codingSpeedItem: vscode.StatusBarItem;
 let accuracyItem : vscode.StatusBarItem;
@@ -97,19 +98,36 @@ function deleteOldChar(): void{
 
 function timeoutProcess(time : number){
 	setTimeout(() => {
-		updateStatusBarItem();
+		if (able){
+			updateStatusBarItem();
+		}
 		currentTime = new Date().getTime();
 		// deleteOldChar();
-		timeoutProcess(time);
+		if (able){
+			timeoutProcess(time);
+		}
 	}, time);
+}
+
+function doDisable(){
+	able = 0;
+	deactivate();
 }
 
 export function activate(context: vscode.ExtensionContext) {
 	currentTime = new Date().getTime();
 	startTime = currentTime;
-	let disposable = vscode.commands.registerCommand('extension.CBA', () => {});
+	able = 1;
+	let disposable = vscode.commands.registerCommand('extension.CBA', () => {
+		able = 1;
+		codingSpeedItem.show();
+		accuracyItem.show();
+	});
 	let evaluation = vscode.commands.registerCommand('cba.evaluation', () => {
 		doEvaluation(context);
+	});
+	let disable = vscode.commands.registerCommand('cba.disable', () => {
+		doDisable();
 	});
 	codingSpeedItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 200);
 	accuracyItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 200);
@@ -117,20 +135,26 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(accuracyItem);
 	context.subscriptions.push(evaluation);
 	context.subscriptions.push(disposable);
+	context.subscriptions.push(disable);
 	timeoutProcess(INTERVAL);
 	vscode.workspace.onDidChangeTextDocument(event => {
-		var typedChar = new TypedChar(new Date().getTime(), event.contentChanges[0].text);
-		if (typedChar.val === ""){
-			backSpaceVec.push(typedChar);
-		}
-		else if (typedChar.val === " " || typedChar.val === "\n"){
-			spaceVec.push(typedChar);
-		}
-		else{
-			charVec.push(typedChar);
+		if (able){
+			var typedChar = new TypedChar(new Date().getTime(), event.contentChanges[0].text);
+			if (typedChar.val === ""){
+				backSpaceVec.push(typedChar);
+			}
+			else if (typedChar.val === " " || typedChar.val === "\n"){
+				spaceVec.push(typedChar);
+			}
+			else{
+				charVec.push(typedChar);
+			}
 		}
 	}, null, context.subscriptions);
 	
 }
 
-export function deactivate() {}
+export function deactivate() {
+	codingSpeedItem.hide();
+	accuracyItem.hide();
+}
