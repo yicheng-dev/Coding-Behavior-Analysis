@@ -8,7 +8,7 @@ An extension for VS Code to provide an analysis of coding behavior like coding s
 
 ![](images/example.gif)
 
-- A shortcut `CTRL+SHIFT+A` is provided to generate a broken line graph which shows the change of your coding speed. Currently we use [canvasJS](https://canvasjs.com) to generate it, but [Chart.js](https://www.chartjs.org) may be a better choice since it's open source.
+- A shortcut `CTRL+SHIFT+A` is provided to generate a broken line graph which shows the change of your coding speed. Currently we use [Chart.js](https://www.chartjs.org) to generate it.
 
 ## Run
 
