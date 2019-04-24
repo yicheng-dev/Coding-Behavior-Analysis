@@ -21,12 +21,12 @@ An extension for VS Code to provide an analysis of coding behavior like coding s
 1. Look for better indicators to measure one's coding performance.
 2. Mine the coding content and analyze it for more interesting conclusion.
 
-### Release Notes
+## Release Notes
 
-#### 1.0.0
+### 1.0.0
 
 Initial release
 
-### License
+## License
 
 [MIT](https://github.com/NJUBroccoli/Coding-Behavior-Analysis/blob/master/LICENSE)
