@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { codingSpeedCpsList, codingAccuracyList, codingSpeedWpsList } from './extension';
+import { codingSpeedCpsList, codingAccuracyList, codingSpeedWpsList, charHashTable } from './extension';
 
 export function doEvaluation(context: vscode.ExtensionContext) {
     const panel = vscode.window.createWebviewPanel(
@@ -14,10 +14,18 @@ export function doEvaluation(context: vscode.ExtensionContext) {
     panel.webview.postMessage(getCodingMessage());
 }
 
+function debugPrintCharHashTable(){
+    for (var key in charHashTable){
+        console.log(key + ": " + charHashTable[key]);
+    }
+}
+
 function getCodingMessage() {
     var speedJsonCps: any = [];
     var speedJsonWps: any = [];
     var accuracyJson: any = [];
+    var charJson: any = [];
+    // debugPrintCharHashTable();
     if (codingSpeedCpsList) {
         for (var i = 0; i < codingSpeedCpsList.length; i++) {
             speedJsonCps.push(codingSpeedCpsList[i]);
@@ -33,10 +41,16 @@ function getCodingMessage() {
             speedJsonWps.push(codingSpeedWpsList[i]);
         }
     }
+    if (charHashTable){
+        for (var key in charHashTable){
+            charJson.push({x: key, y: charHashTable[key]});
+        }
+    }
     var json: any = [];
     json.push({ id: 0, content: speedJsonCps });
     json.push({ id: 1, content: speedJsonWps });
     json.push({ id: 2, content: accuracyJson });
+    json.push({ id: 3, content: charJson     });
     return json;
 }
 
@@ -48,15 +62,19 @@ function getWebviewContent() {
     var speedJsonCps;
     var speedJsonWps;
     var accuracyJson;
+    var charJson;
     var xlabels = [];
     var ylabelsCps = [];
     var ylabelsWps = [];
     var ylabelsAcc = [];
+    var charlabels = [];
+    var charCountlabels = [];
     window.addEventListener('message', event => {
         const message = event.data;
         speedJsonCps = message[0].content;
         speedJsonWps = message[1].content;
         accuracyJson = message[2].content;
+        charJson = message[3].content;
     });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
@@ -72,6 +90,10 @@ function getWebviewContent() {
         for (i = 0; i < speedJsonWps.length; i ++){
             ylabelsAcc.push(accuracyJson[i].y);
         }
+        for (i = 0; i < charJson.length; i ++){
+            charlabels.push(charJson[i].x);
+            charCountlabels.push(charJson[i].y);
+        }
         var data = {
             labels: xlabels,
             datasets: [{
@@ -83,6 +105,11 @@ function getWebviewContent() {
             }]
         };
         var options = {
+            title: {
+                display: true,
+                text: 'Change of Coding Speed',
+                position: 'bottom'
+            },
             scales: {
                 xAxes: [{
                     display: true,
@@ -114,6 +141,11 @@ function getWebviewContent() {
             }]
         };
         options = {
+            title: {
+                display: true,
+                text: 'Change of Coding Accuracy',
+                position: 'bottom'
+            },
             scales: {
                 xAxes: [{
                     display: true,
@@ -137,6 +169,31 @@ function getWebviewContent() {
             data: data,
             options: options
         });
+
+        data = {
+            datasets: [{
+                fill: true,
+                data: charCountlabels
+            }],
+            labels: charlabels
+        };
+        options = {
+            title: {
+                display: true,
+                text: 'Frequency of Typed characters',
+                position: 'top'
+            },
+            legend: {
+                display: true,
+                position: 'bottom'
+            }
+        };
+        ctx = document.getElementById("charFreqChart").getContext("2d");
+        var charFreqChart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: options
+        });
     }
     </script>
     <title> Evaluation of Coding Behavior </title>
@@ -144,7 +201,11 @@ function getWebviewContent() {
     <body>
     <h1>Evaluation of Coding Behavior</h1>
     <canvas id="speedChart" style="height: 300px; width: 100%;"></canvas>
+    <HR style= " border: 1 dashed #987cb9" width ="100%" cb 9 SIZE = 1>
     <canvas id="accuracyChart" style="height: 300px; width: 100%;"></canvas>
+    <HR style= " border: 1 dashed #987cb9" width ="100%" cb 9 SIZE = 1>
+    <canvas id="charFreqChart" style="height: 300px; width: 100%;"></canvas>
+    <HR style= " border: 1 dashed #987cb9" width ="100%" cb 9 SIZE = 1>
     </body>
     </html>`;
 }

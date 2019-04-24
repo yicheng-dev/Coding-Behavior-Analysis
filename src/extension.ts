@@ -1,10 +1,14 @@
 import * as vscode from 'vscode';
 import { doEvaluation } from './evaluation';
 
+export interface IHash {
+    [details: string] : number;
+} 
+
 class TypedChar {
 	typedTime : number;
-	val : String;
-	constructor(typedTime : number, val : String){
+	val : string;
+	constructor(typedTime : number, val : string){
 		this.typedTime = typedTime;
 		this.val = val;
 	}
@@ -13,6 +17,29 @@ class TypedChar {
 const INTERVAL = 500;
 const DELAY_RATE = 10;
 
+const alphabet = [
+	"0", "1", "2", "3", "4",
+	"5", "6", "7", "8", "9",
+	"a", "b", "c", "d", "e",
+	"f", "g", "h", "i", "j",
+	"k", "l", "m", "n", "o",
+	"p", "q", "r", "s", "t",
+	"u", "v", "w", "x", "y",
+	"z", "A", "B", "C", "D",
+	"E", "F", "G", "H", "I",
+	"J", "K", "L", "M", "N",
+	"O", "P", "Q", "R", "S",
+	"T", "U", "V", "W", "X",
+	"Y", "Z", "!", "@", "#",
+	"$", "%", "^", "&", "*",
+	"(", ")", "-", "=", "+",
+	"~", "`", "[", "]", "{",
+	"}", "\\", "|", ";", ":",
+	"'", "\"", ",", ".", "/",
+	"<", ">", "?", "{}", "[]",
+	"()"
+];
+
 var charVec : any = [];
 var backSpaceVec : any = [];
 var spaceVec : any = [];
@@ -20,6 +47,7 @@ export var codingSpeedCpsList : any = [];
 export var codingSpeedWpsList : any = [];
 export var codingAccuracyList : any = [];
 
+export var charHashTable : IHash = {};
 
 var currentTime = new Date().getTime();
 var startTime : any;
@@ -114,10 +142,17 @@ function doDisable(){
 	deactivate();
 }
 
+function initHashTable(){
+	for (var word in alphabet){
+		charHashTable[alphabet[word]] = 0;
+	}
+}
+
 export function activate(context: vscode.ExtensionContext) {
 	currentTime = new Date().getTime();
 	startTime = currentTime;
 	able = 1;
+	initHashTable();
 	let disposable = vscode.commands.registerCommand('extension.CBA', () => {
 		able = 1;
 		codingSpeedItem.show();
@@ -147,6 +182,9 @@ export function activate(context: vscode.ExtensionContext) {
 				spaceVec.push(typedChar);
 			}
 			else{
+				if (alphabet.includes(typedChar.val)){
+					charHashTable[typedChar.val] ++;
+				}
 				charVec.push(typedChar);
 			}
 		}
