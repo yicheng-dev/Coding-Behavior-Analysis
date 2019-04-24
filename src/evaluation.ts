@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { codingSpeedList, codingAccuracyList } from './extension';
+import { codingSpeedCpsList, codingAccuracyList, codingSpeedWpsList } from './extension';
 
 export function doEvaluation(context: vscode.ExtensionContext) {
     const panel = vscode.window.createWebviewPanel(
@@ -12,25 +12,15 @@ export function doEvaluation(context: vscode.ExtensionContext) {
 
     panel.webview.html = getWebviewContent();
     panel.webview.postMessage(getCodingMessage());
-    panel.webview.onDidReceiveMessage(
-        message => {
-          switch (message.command) {
-            case 'alert':
-              console.log(message.text);
-              return;
-          }
-        },
-        undefined,
-        context.subscriptions
-      );
 }
 
 function getCodingMessage() {
-    var speedJson: any = [];
+    var speedJsonCps: any = [];
+    var speedJsonWps: any = [];
     var accuracyJson: any = [];
-    if (codingSpeedList) {
-        for (var i = 0; i < codingSpeedList.length; i++) {
-            speedJson.push(codingSpeedList[i]);
+    if (codingSpeedCpsList) {
+        for (var i = 0; i < codingSpeedCpsList.length; i++) {
+            speedJsonCps.push(codingSpeedCpsList[i]);
         }
     }
     if (codingAccuracyList) {
@@ -38,9 +28,15 @@ function getCodingMessage() {
             accuracyJson.push(codingAccuracyList[i]);
         }
     }
+    if (codingSpeedWpsList){
+        for (i = 0; i < codingSpeedWpsList.length; i++){
+            speedJsonWps.push(codingSpeedWpsList[i]);
+        }
+    }
     var json: any = [];
-    json.push({ id: 0, content: speedJson });
-    json.push({ id: 1, content: accuracyJson });
+    json.push({ id: 0, content: speedJsonCps });
+    json.push({ id: 1, content: speedJsonWps });
+    json.push({ id: 2, content: accuracyJson });
     return json;
 }
 
@@ -50,31 +46,65 @@ function getWebviewContent() {
     <head>
     <canvas id="myChart" style="height: 300px; width: 100%;"></canvas>
     <script>
-    var speedJson;
+    var speedJsonCps;
+    var speedJsonWps;
     var accuracyJson;
     var xlabels = [];
-    var ylabels = [];
+    var ylabelsCps = [];
+    var ylabelsWps = [];
     window.addEventListener('message', event => {
         const message = event.data;
-        speedJson = message[0].content;
-        accuracyJson = message[1].content;
+        speedJsonCps = message[0].content;
+        speedJsonWps = message[1].content;
+        accuracyJson = message[2].content;
     });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script>
     window.onload = function () {
-        for (var i = 0; i < speedJson.length; i ++){
-            xlabels.push(speedJson[i].x.toString());
-            ylabels.push(speedJson[i].y);
+        for (var i = 0; i < speedJsonCps.length; i ++){
+            xlabels.push(speedJsonCps[i].x.toString());
+            ylabelsCps.push(speedJsonCps[i].y);
+        }
+        for (i = 0; i < speedJsonWps.length; i ++){
+            ylabelsWps.push(speedJsonWps[i].y);
         }
         var data = {
             labels: xlabels,
             datasets: [{
-                data: ylabels
+                label: 'Coding Speed (Char/s)',
+                data: ylabelsCps
+            }, {
+                label: 'Coding Speed (Word/s)',
+                data: ylabelsWps
             }]
         };
+        var options = {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time (s)'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Coding Speed'
+                    }
+                }]
+            }
+        };
         var ctx = document.getElementById("myChart").getContext("2d");
-        var MyNewChart = new Chart(ctx).Line(data);
+        var MyNewChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: options
+        });
     }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
     </head>
     <body>
     </body>

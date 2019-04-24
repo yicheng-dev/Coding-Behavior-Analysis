@@ -16,7 +16,8 @@ const DELAY_RATE = 10;
 var charVec : any = [];
 var backSpaceVec : any = [];
 var spaceVec : any = [];
-export var codingSpeedList : any = [];
+export var codingSpeedCpsList : any = [];
+export var codingSpeedWpsList : any = [];
 export var codingAccuracyList : any = [];
 
 
@@ -46,8 +47,10 @@ function updateStatusBarItem(): void {
 		let codeSpeedCps = (codeCharCnt * 1000.0 / (INTERVAL * DELAY_RATE));
 		let codeSpeedWps = (codeWordCnt * 1000.0 / (INTERVAL * DELAY_RATE));
 		codingSpeedItem.text = `Coding Speed: ${codeSpeedCps.toFixed(2)}CPS | ${codeSpeedWps.toFixed(2)}WPS`;
-		var codingSpeedListItem = {x: (currentTime - startTime) / 1000.0, y: codeSpeedCps};
-		codingSpeedList.push(codingSpeedListItem);
+		var codingSpeedCpsListItem = {x: (currentTime - startTime) / 1000.0, y: codeSpeedCps};
+		var codingSpeedWpsListItem = {x: (currentTime - startTime) / 1000.0, y: codeSpeedWps};
+		codingSpeedCpsList.push(codingSpeedCpsListItem);
+		codingSpeedWpsList.push(codingSpeedWpsListItem);
 		codingSpeedItem.show();
 
 		let accurateCnt = charVec.length;
