@@ -16,7 +16,7 @@ Since the naïve extension hasn't been published to market, you can download the
 
 ## TODO
 
-1. Plot a broken line graph to show the change of CPS and Accuracy.
+1. Look for better indicators to measure one's coding performance.
 2. Mine the coding content and analyze it for more interesting conclusion.
 
 ## Release Notes
