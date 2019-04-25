@@ -69,6 +69,15 @@ function getWebviewContent() {
     var ylabelsAcc = [];
     var charlabels = [];
     var charCountlabels = [];
+    var backgroundColorSelected = [];
+    const backgroundColors = [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+    ];
     window.addEventListener('message', event => {
         const message = event.data;
         speedJsonCps = message[0].content;
@@ -94,6 +103,10 @@ function getWebviewContent() {
             charlabels.push(charJson[i].x);
             charCountlabels.push(charJson[i].y);
         }
+        for (i = 0; i < charJson.length; i ++){
+            backgroundColorSelected.push(backgroundColors[i % backgroundColors.length]);
+        }
+
         var data = {
             labels: xlabels,
             datasets: [{
@@ -173,7 +186,8 @@ function getWebviewContent() {
         data = {
             datasets: [{
                 fill: true,
-                data: charCountlabels
+                data: charCountlabels,
+                backgroundColor: backgroundColorSelected
             }],
             labels: charlabels
         };
@@ -184,13 +198,35 @@ function getWebviewContent() {
                 position: 'top'
             },
             legend: {
-                display: true,
-                position: 'bottom'
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Type of Characters'
+                    },
+                    stacked: false,
+                    ticks: {
+                        stepSize: 1,
+                        min: 0,
+                        autoSkip: false
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Count (times)'
+                    },
+                    stacked: false
+                }]
             }
         };
         ctx = document.getElementById("charFreqChart").getContext("2d");
         var charFreqChart = new Chart(ctx, {
-            type: 'pie',
+            type: 'bar',
             data: data,
             options: options
         });

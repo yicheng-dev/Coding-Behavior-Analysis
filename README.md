@@ -1,6 +1,6 @@
 # Coding Behavior Analysis
 
-An extension for VS Code to provide an analysis of coding behavior like coding speed and coding accuracy.
+An extension for VS Code to provide an analysis of coding behavior like coding speed, coding accuracy and frequency of typed characters.
 
 ## Features
 
@@ -22,8 +22,13 @@ An extension for VS Code to provide an analysis of coding behavior like coding s
 
 1. Look for better indicators to measure one's coding performance.
 2. Mine the coding content and analyze it for more interesting conclusion.
+3. Dynamically update graphs while typing.
 
 ## Release Notes
+
+### 1.0.2
+
+New features: Show the frequency of typed characters in a bar.
 
 ### 1.0.1
 

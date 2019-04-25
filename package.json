@@ -2,13 +2,13 @@
 	"name": "cba-vscode",
 	"displayName": "Coding Behavior Analysis",
 	"publisher": "Broccoli",
-	"description": "a tool analyzing your coding behavior",
+	"description": "A tool analyzing your coding behavior like coding speed, coding accuracy and frequency of typed characters.",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/NJUBroccoli/Coding-Behavior-Analysis/"
 	},
 	"license": "MIT",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"engines": {
 		"vscode": "^1.33.0"
 	},
